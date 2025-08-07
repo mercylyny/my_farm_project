@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>📊 Farm Dashboard</h2>
+
+<div class="stats-grid">
+    <div class="card stat-card">
+        <h3>UGX {{ "{:,.0f}".format(total_revenue) }}</h3>
+        <p>Total Revenue</p>
+    </div>
+
+    <div class="card stat-card">
+        <h3>UGX {{ "{:,.0f}".format(total_inputs) }}</h3>
+        <p>Total Expenses</p>
+    </div>
+
+    <div class="card stat-card">
+        <h3>UGX {{ "{:,.0f}".format(total_transport) }}</h3>
+        <p>Transport Costs</p>
+    </div>
+
+    <div class="card stat-card">
+        <h3>{{ total_customers }}</h3>
+        <p>Total Customers</p>
+    </div>
+
+    <div class="card stat-card" style="grid-column: span 2;">
+        <h3 style="color: {{ 'green' if net_profit >= 0 else 'red' }}">
+            UGX {{ "{:,.0f}".format(net_profit) }}
+        </h3>
+        <p>Net Profit</p>
+    </div>
+</div>
+
+<div class="card">
+    <h3>📈 Quick Stats</h3>
+    <p><strong>Profit Margin:</strong>
+        {% if total_revenue > 0 %}
+            {{ "{:.1f}".format((net_profit / total_revenue) * 100) }}%
+        {% else %}
+            0%
+        {% endif %}
+    </p>
+
+    {% if net_profit >= 0 %}
+        <div style="color: green; font-weight: bold;">
+            ✅ Your farm is profitable!
+        </div>
+    {% else %}
+        <div style="color: red; font-weight: bold;">
+            ⚠️ Review expenses to improve profitability
+        </div>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3>🚀 Quick Actions</h3>
+    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <a href="/customers" class="btn">Add Customer</a>
+        <a href="/inputs" class="btn">Record Input</a>
+        <a href="/outputs" class="btn">Record Sale</a>
+        <a href="/messages" class="btn">Send Message</a>
+    </div>
+</div>
+
+<script>
+// Real-time dashboard updates (optional)
+function updateDashboard() {
+    fetch('/api/dashboard')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Dashboard updated:', data.data);
+                // You can update specific elements here if needed
+            }
+        })
+        .catch(error => console.error('Error updating dashboard:', error));
+}
+
+// Update every 30 seconds (optional)
+// setInterval(updateDashboard, 30000);
+</script>
+{% endblock %}
