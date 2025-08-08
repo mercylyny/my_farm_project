@@ -66,7 +66,7 @@ class DatabaseManager:
         conn.commit()
         conn.close()
 
-    def row_to_dict(self, row, columns):
+    def row_to_dict(self,row: columns):
         """Convert SQLite row to dictionary"""
         return dict(zip(columns, row)) if row else None
 
